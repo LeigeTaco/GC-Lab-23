@@ -196,8 +196,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Models\GCWebShopModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>GCWebShopModel.Context.cs</LastGenOutput>
       <DependentUpon>GCWebShopModel.edmx</DependentUpon>
+      <LastGenOutput>GCWebShopModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Models\GCWebShopModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
