@@ -11,12 +11,68 @@ namespace GC_Lab_23.Controllers
     {
         public ActionResult Index()
         {
+            GCWebORM ORM = new GCWebORM();
+            Session userSession = new Session();
+            if (Request.Cookies["SessionID"] == null)       //No Session Cookie Exists
+            {
+                HttpCookie sessionCookie = new HttpCookie("SessionID", userSession.ToString());
+                sessionCookie.Expires = DateTime.Now.AddMinutes(30);
+                Response.Cookies.Add(sessionCookie);
+            }
+            else                                            //Cookie Exists
+            {
+
+                try                                         //Try Querying the DB
+                {
+                    userSession = ORM.Sessions.Find(Request.Cookies["SessionID"].Value);
+                }
+                catch (NullReferenceException)              //Invalid Key, I think
+                {
+                    HttpCookie sessionCookie = new HttpCookie("SessionID", userSession.ToString());
+                    sessionCookie.Expires = DateTime.Now.AddMinutes(30);
+                }
+                catch (Exception e)                         //General Exception, Reset Session
+                {
+                    ViewBag.Debug = e;
+
+                    HttpCookie sessionCookie = new HttpCookie("SessionID", userSession.ToString());
+                    sessionCookie.Expires = DateTime.Now.AddMinutes(30);
+                }
+
+                if (userSession.LogoffTime < DateTime.Now)  //Expired Session
+                {
+                    userSession = new Session();
+                    HttpCookie sessionCookie = new HttpCookie("SessionID", userSession.ToString());
+                    sessionCookie.Expires = DateTime.Now.AddMinutes(30);
+                    Response.Cookies.Add(sessionCookie);
+                }
+                else                                        //Everything is Valid
+                {
+                    HttpCookie sessionCookie = new HttpCookie("SessionID", userSession.ToString());
+                    sessionCookie.Expires = DateTime.Now.AddMinutes(30);
+                    Response.Cookies.Add(sessionCookie);
+                }
+
+            }
+
+            ORM.Sessions.Add(userSession);
+            ORM.SaveChanges();
+
+            ViewBag.UserSession = userSession.ToString();
+            ViewBag.Items = ORM.Items.ToList();
+
             return View();
         }
 
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
+
+            GCWebORM ORM = new GCWebORM();
+
+            ViewBag.SessionList = ORM.Sessions.ToList();
+            ViewBag.SessionList.Add(new Session());
+            ViewBag.UserSession = ORM.Sessions.Find(Request.Cookies["SessionID"].Value);
 
             return View();
         }

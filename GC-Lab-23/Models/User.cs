@@ -11,7 +11,7 @@ namespace GC_Lab_23.Models
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,23 +20,25 @@ namespace GC_Lab_23.Models
             this.Sessions = new HashSet<Session>();
         }
 
-        public User(Guid userID, string username, string password, string email, string phone, bool isadmin)
-        {
-            UserID = userID;
-            Username = username;
-            Password = password;
-            Email = email;
-            Phone = phone;
-            isAdmin = isadmin;
-        }
-
         public System.Guid UserID { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
         public bool isAdmin { get; set; }
-    
+
+        public User(Guid uid, string name, string pass, string email, string phone, bool isAd)
+        {
+
+            UserID = uid;
+            Username = name;
+            Password = pass;
+            Email = email;
+            Phone = phone;
+            isAdmin = isAd;
+
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> Sessions { get; set; }
     }
